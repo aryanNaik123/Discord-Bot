@@ -4,6 +4,7 @@ import requests
 import json 
 import random 
 import time 
+from keep_alive import keep_alive
 
 client = discord.Client()
 
@@ -15,6 +16,7 @@ starter_encouragements = [
   "Atleast you're not a bot like me"
 ]
 what_arr = ['what','why']
+social_arr = ['twitter.com','youtube.com']
 
 def get_quote(): 
   response = requests.get('https://zenquotes.io/api/random')
@@ -44,10 +46,11 @@ async def on_message(message):
     await message.channel.send('your mom')
     time.sleep(0.5)
     await message.channel.send('GOT EM')
-
   if message.content.startswith('shark pog'):
     await message.channel.send(file=discord.File('tenor.gif'))
+  if any(word in msg for word in social_arr):
+    await message.channel.send('dont care')
 
-
+keep_alive()
 
 client.run(os.getenv('TOKEN'))
