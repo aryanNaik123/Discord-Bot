@@ -3,6 +3,7 @@ import os
 import requests
 import json 
 import random 
+import time 
 
 client = discord.Client()
 
@@ -13,6 +14,7 @@ starter_encouragements = [
   'Hang in there', 
   "Atleast you're not a bot like me"
 ]
+what_arr = ['what','why']
 
 def get_quote(): 
   response = requests.get('https://zenquotes.io/api/random')
@@ -28,14 +30,6 @@ async def on_ready():
 async def on_message(message): 
   if message.author == client.user: 
     return 
-  
-  if message.content.startswith('$hello'): 
-    await message.channel.send('hello!')
-
-@client.event 
-async def on_message(message): 
-  if message.author == client.user: 
-    return 
 
   msg = message.content
 
@@ -46,8 +40,14 @@ async def on_message(message):
     await message.channel.send(random.choice(starter_encouragements))
   if (str(msg) == 'lol'): 
     await message.channel.send('stop saying lol')
+  if any(word in msg for word in what_arr):
+    await message.channel.send('your mom')
+    time.sleep(0.5)
+    await message.channel.send('GOT EM')
 
-@client.event
-  if message.content.startswith('what','why'):
-    
+  if message.content.startswith('shark pog'):
+    await message.channel.send(file=discord.File('tenor.gif'))
+
+
+
 client.run(os.getenv('TOKEN'))
