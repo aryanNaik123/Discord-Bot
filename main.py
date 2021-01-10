@@ -4,6 +4,7 @@ import requests
 import json 
 import random 
 import time 
+import asyncio
 from keep_alive import keep_alive
 
 client = discord.Client()
@@ -15,7 +16,7 @@ starter_encouragements = [
   'Hang in there', 
   "Atleast you're not a bot like me"
 ]
-what_arr = ['what','why']
+what_arr = ['what','why','are','how','when','where','is']
 social_arr = ['twitter.com','youtube.com']
 
 def get_quote(): 
@@ -50,7 +51,27 @@ async def on_message(message):
     await message.channel.send(file=discord.File('tenor.gif'))
   if any(word in msg for word in social_arr):
     await message.channel.send('dont care')
+  if message.content.startswith('$daily'):
+    await message.channel.send('@everyone how are yall doing')
+    time.sleep(300)
+    await message.channel.send('@everyone how are yall doing')
+    time.sleep(300)
+    await message.channel.send('@everyone how are yall doing')
+    time.sleep(300)
+    await message.channel.send('@everyone how are yall doing')
+  if message.content.startswith('$thumb'):
+      channel = message.channel
+      await channel.send('Send me that 👍 reaction, mate')
 
+      def check(reaction, user):
+          return user == message.author and str(reaction.emoji) == '👍'
+
+      try:
+          reaction, user = await client.wait_for('reaction_add', timeout=60.0, check=check)
+      except asyncio.TimeoutError:
+          await channel.send('👎')
+      else:
+          await channel.send('👍')
 keep_alive()
 
 client.run(os.getenv('TOKEN'))
