@@ -27,7 +27,7 @@ def get_quote():
   return quote
 
 def dog_api(): 
-  reponse = requests.get('https://dog.ceo/api/breeds/image/random')
+  reponse = requests.get('https://dog.ceo/api/breed/corgi/images/random')
   url = reponse.json()['message']
   urllib.request.urlretrieve(url, "sample.jpg")
 
@@ -41,7 +41,7 @@ async def on_message(message):
   if message.author == client.user: 
     return 
   msg = message.content
-  if message.content.startswith('$dog'):
+  if message.content.startswith('$corgi'):
     dog = dog_api()
     await message.channel.send(file=discord.File('sample.jpg'))
   if message.content.startswith('$inspire'): 
