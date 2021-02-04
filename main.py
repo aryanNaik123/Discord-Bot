@@ -12,8 +12,8 @@ import socket
 import telnetlib
 
 # Minecraft Server Credentials
-ip = str(os.getenv('ip'))
-host = str(os.getenv('host'))
+ip_env = str(os.getenv('ip'))
+host_env = str(os.getenv('host'))
 
 
 def isOpen(ip,port):
@@ -50,7 +50,7 @@ def dog_api():
   urllib.request.urlretrieve(url, "sample.jpg")
 
 def mcsrv_api(): 
-  ip = ip + ':' + host
+  ip = ip_env + ':' + host_env
   url = "https://api.mcsrvstat.us/2/" + ip
   raw = requests.get(url)
   return(raw.json()['players'])
@@ -80,9 +80,9 @@ async def on_message(message):
   if any(word in msg for word in social_arr):
     await message.channel.send('dont care')
   if message.content.startswith('$server'):
-    await message.channel.send(isOpen(ip + ':' + host))
+    await message.channel.send(isOpen(ip_env + ':' + host_env))
   if message.content.startswith('$ip'):
-    await message.channel.send(ip + ':' + host)
+    await message.channel.send(ip_env + ':' + host_env)
   if message.content.startswith('$p'): 
     await message.channel.send(mcsrv_api())
 keep_alive()
