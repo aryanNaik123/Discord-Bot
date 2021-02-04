@@ -8,6 +8,24 @@ import asyncio
 import aiohttp
 import urllib
 from keep_alive import keep_alive
+import socket
+import telnetlib
+
+# Minecraft Server Credentials
+ip = str(os.getenv('ip'))
+host = str(os.getenv('host'))
+
+
+def isOpen(ip,port):
+  a_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+  location = (ip, int(port))
+  result_of_check = a_socket.connect_ex(location)
+
+  if result_of_check == 0:
+    return("Port is open")
+  else:
+    return("Port is not open")
 
 client = discord.Client()
 
@@ -30,6 +48,12 @@ def dog_api():
   reponse = requests.get('https://dog.ceo/api/breed/corgi/images/random')
   url = reponse.json()['message']
   urllib.request.urlretrieve(url, "sample.jpg")
+
+def mcsrv_api(): 
+  ip = ip + ':' + host
+  url = "https://api.mcsrvstat.us/2/" + ip
+  raw = requests.get(url)
+  return(raw.json()['players'])
 
 
 @client.event 
@@ -55,19 +79,12 @@ async def on_message(message):
     await message.channel.send(file=discord.File('tenor.gif'))
   if any(word in msg for word in social_arr):
     await message.channel.send('dont care')
-  if message.content.startswith('$thumb'):
-      channel = message.channel
-      await channel.send('Send me that 👍 reaction, mate')
-
-      def check(reaction, user):
-          return user == message.author and str(reaction.emoji) == '👍'
-
-      try:
-          reaction, user = await client.wait_for('reaction_add', timeout=60.0, check=check)
-      except asyncio.TimeoutError:
-          await channel.send('👎')
-      else:
-          await channel.send('👍')
+  if message.content.startswith('$server'):
+    await message.channel.send(isOpen(ip + ':' + host))
+  if message.content.startswith('$ip'):
+    await message.channel.send(ip + ':' + host)
+  if message.content.startswith('$p'): 
+    await message.channel.send(mcsrv_api())
 keep_alive()
 
 client.run(os.getenv('TOKEN'))
