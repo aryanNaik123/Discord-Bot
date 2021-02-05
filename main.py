@@ -11,6 +11,7 @@ from keep_alive import keep_alive
 import socket
 import telnetlib
 
+
 # Minecraft Server Credentials
 ip_env = str(os.getenv('ip'))
 host_env = str(os.getenv('host'))
@@ -55,6 +56,9 @@ def mcsrv_api():
   raw = requests.get(url)
   return(raw.json()['players'])
 
+def help():
+  f=open("README.md", "r")
+  return(f.read())
 
 @client.event 
 async def on_ready(): 
@@ -80,11 +84,13 @@ async def on_message(message):
   if any(word in msg for word in social_arr):
     await message.channel.send('dont care')
   if message.content.startswith('$server'):
-    await message.channel.send(isOpen(ip_env + ':' + host_env))
+    await message.channel.send(isOpen(ip_env,host_env))
   if message.content.startswith('$ip'):
     await message.channel.send(ip_env + ':' + host_env)
   if message.content.startswith('$p'): 
     await message.channel.send(mcsrv_api())
+  if message.content.startswith('$help'):
+    await message.channel.send(help())
 keep_alive()
 
 client.run(os.getenv('TOKEN'))
