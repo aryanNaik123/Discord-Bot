@@ -16,7 +16,7 @@ import telnetlib
 ip_env = str(os.getenv('ip'))
 host_env = str(os.getenv('host'))
 
-
+# Pings Server 
 def isOpen(ip,port):
   a_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -46,15 +46,25 @@ def get_quote():
   return quote
 
 def dog_api(): 
-  reponse = requests.get('https://dog.ceo/api/breed/corgi/images/random')
-  url = reponse.json()['message']
+  response = requests.get('https://dog.ceo/api/breed/corgi/images/random')
+  url = response.json()['message']
   urllib.request.urlretrieve(url, "sample.jpg")
 
 def mcsrv_api(): 
   ip = ip_env + ':' + host_env
   url = "https://api.mcsrvstat.us/2/" + ip
   raw = requests.get(url)
-  return(raw.json()['players'])
+  players = raw.json()['players']
+  online = str(players['online'])
+  max_players = str(players['max'])
+  try:
+    list_players = ', '.join(players['list'])
+    return(online + '/' +max_players+"\n"+'Players: '+list_players)
+  except:
+    return('0/'+max_players)
+
+
+
 
 def help():
   f=open("README.md", "r")
